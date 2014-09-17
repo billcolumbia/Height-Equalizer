@@ -6,7 +6,7 @@ Small bit of JS that takes an array of elements (using jQuery, please) and finds
 
 - **classHook:** (required) A string for the selector (of the elements) you wish to modify. Examples below.
 - **bottomPadding:** (optional) {number} Defaults to 0. Some extra fluff for the height if you have things pos: abs; at the bottom
-- **bottomPadding:** (optional) {boolean} Defaults to false. If you want to trigger a recalc on resize, please note: you will need ['smart resize'](http://www.paulirish.com/2009/throttled-smartresize-jquery-event-handler/) for this
+- **onResize:** (optional) {boolean} Defaults to false. If you want to trigger a recalc on resize, please note: you will need ['smart resize'](http://www.paulirish.com/2009/throttled-smartresize-jquery-event-handler/) for this
 
 Here's a really simple example of how you can use this in your project.
 ```js
