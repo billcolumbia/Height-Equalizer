@@ -1,39 +1,56 @@
 /**
  * Element Height Equalizer
  *
- * @description: Small bit of JS that takes an array of elements (using jQuery, please)
+ * @description:
+ * Small bit of JS that takes an array of elements (using jQuery, please)
  * and finds the tallest element, and then applies that height to all of the elements
  * in that array. This can get heavy on the render so don't go too crazy ;)
  *
- * @param: {string} classHook - Usually the class you want to use as a hook for an array of
- *                              elements. Something like '.eq-hook-thing-name'
+ * @param: {string} classHook:
+ * Usually the class you want to use as a hook for an array of
+ * elements. Something like '.eq-hook-thing-name'
  *
- * @param: {number} bottomPadding - An optional bit of 'padding' for the bottom of the element.
+ * @param: {number} bottomPadding:
+ * Optional bit of 'padding' for the bottom of the element.
  *
- * @param: {boolean} onResize - An optional argument for enabling resize event listeners with
- *                              smartresize. Read more here: http://www.paulirish.com/2009/throttled-smartresize-jquery-event-handler/
- *                              Heads up - I will not use the standard resize event in this bit of JS
+ * @param: {boolean} onResize:
+ * Optional argument for enabling resize event listeners with
+ * smartresize. Read more here: http://www.paulirish.com/2009/throttled-smartresize-jquery-event-handler/
+ * Heads up - I will not use the standard resize event in this bit of JS
+ *
+ * @param: {number} minWidth:
+ * Optional argument for setting a minimum window width as a requirement for the
+ * function to execute. Helps when the things you are resizing are stacked on smaller
+ * viewports rather than side by side.
  */
 
 function HeightEqualizer( options ) {
 
   this.maxHeight        = 0;
-
-  this.setOptions( options );
-
-  // Run on initialization
-  this.onThisPage() && this.init();
-}
-
-HeightEqualizer.prototype.setOptions = function( options ) {
   this.$elementsToWatch = $(options.classHook);
   this.bottomPadding    = options.bottomPadding || 0;
-  this.onResize         = options.onResize || false;
+  this.onResize         = options.onResize      || false;
+  this.minWidth         = options.minWidth      || 0;
+
+  if ( this.onThisPage() ) {
+    this.$document        = $(document);
+    this.init();
+    this.onResize && this.watchForResize();
+  }
+
 }
 
 HeightEqualizer.prototype.onThisPage = function() {
   // Return whether or not the given hook is in the DOM
   if ( this.$elementsToWatch.length ) {
+    return true;
+  };
+  return false;
+}
+
+HeightEqualizer.prototype.largerThanMinViewport = function() {
+  // Return whether or not the given hook is in the DOM
+  if ( this.$document.width() > this.minWidth ) {
     return true;
   };
   return false;
@@ -72,7 +89,6 @@ HeightEqualizer.prototype.init = function() {
   // Methods to run on initialization
   this.findMaxHeight();
   this.setNewHeight();
-  this.onResize && this.watchForResize();
 }
 
 HeightEqualizer.prototype.watchForResize = function() {
@@ -81,7 +97,9 @@ HeightEqualizer.prototype.watchForResize = function() {
   // HEADS UP: I will not use the standard resize event in this bit of JS,
   // you are however, more than welcome to fork this and use it at your own risk.
   $(window).smartresize( $.proxy(function(){
-    this.findMaxHeight();
-    this.setNewHeight();
+    if ( this.largerThanMinViewport() ) {
+      // Re-init if minWidth is met
+      this.init();
+    }
   }, this) );
 }

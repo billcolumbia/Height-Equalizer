@@ -7,17 +7,17 @@ Small bit of JS that takes an array of elements (using jQuery, please) and finds
 - **classHook:** (required) A string for the selector (of the elements) you wish to modify. Examples below.
 - **bottomPadding:** (optional) {number} Defaults to 0. Some extra fluff for the height if you have things pos: abs; at the bottom
 - **onResize:** (optional) {boolean} Defaults to false. If you want to trigger a recalc on resize, please note: you will need ['smart resize'](http://www.paulirish.com/2009/throttled-smartresize-jquery-event-handler/) for this
+- **minWidth:** (optional) Optional argument for setting a minimum window width as a requirement for the function to execute.
 
 Here's a really simple example of how you can use this in your project.
 ```js
-// Options
-var options = {
-  classHook: '.eq-hook-thing-name-maybe',
-  bottomPadding: 50, // translates to a peexel value
-  onResize: true
-};
 
-var musicians = new HeightEqualizer( options );
+var aNameForYourInstance = new HeightEqualizer({
+  classHook: '.hook-name-for-your-thing-to-watch', // This can be whatever class you want
+  bottomPadding: 50, // translates to a pixel value
+  onResize: true, // Make sure you have smartresize if this is true!
+  minWidth: 480 // translates to a pixel value
+});
 ```
 
 
