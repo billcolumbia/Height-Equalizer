@@ -1,12 +1,15 @@
 /**
  * Element Height Equalizer
  *
+ * @author:
+ * Bill Columbia - hello@billcolumbia.com
+ *
  * @description:
  * Small bit of JS that takes an array of elements (using jQuery, please)
  * and finds the tallest element, and then applies that height to all of the elements
  * in that array. This can get heavy on the render so don't go too crazy ;)
  *
- * @param: {string} classHook:
+ * @param: {string} selector:
  * Usually the class you want to use as a hook for an array of
  * elements. Something like '.eq-hook-thing-name'
  *
@@ -27,17 +30,14 @@
 function HeightEqualizer( options ) {
 
   this.maxHeight        = 0;
-  this.$elementsToWatch = $(options.classHook);
+  this.$elementsToWatch = $(options.selector);
   this.bottomPadding    = options.bottomPadding || 0;
   this.onResize         = options.onResize      || false;
   this.minWidth         = options.minWidth      || 0;
+  this.$document        = $(document);
 
-  if ( this.onThisPage() ) {
-    this.$document        = $(document);
-    this.init();
-    this.onResize && this.watchForResize();
-  }
-
+  this.onThisPage() && this.largerThanMinViewport() && this.init();
+  this.onThisPage() && this.onResize && this.watchForResize();
 }
 
 HeightEqualizer.prototype.onThisPage = function() {
@@ -50,10 +50,13 @@ HeightEqualizer.prototype.onThisPage = function() {
 
 HeightEqualizer.prototype.largerThanMinViewport = function() {
   // Return whether or not the given hook is in the DOM
-  if ( this.$document.width() > this.minWidth ) {
+  if ( window.innerWidth >= this.minWidth ) {
+    // console.log('Window is greater than ' + this.minWidth + ' it is ' + window.innerWidth);
     return true;
+  } else {
+    // console.log('Window is less than ' + this.minWidth + ' it is ' + window.innerWidth);
+    return false;
   };
-  return false;
 }
 
 HeightEqualizer.prototype.setAutoHeight = function() {
@@ -100,6 +103,8 @@ HeightEqualizer.prototype.watchForResize = function() {
     if ( this.largerThanMinViewport() ) {
       // Re-init if minWidth is met
       this.init();
-    }
+    } else {
+      this.setAutoHeight();
+    };
   }, this) );
 }
