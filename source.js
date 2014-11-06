@@ -51,10 +51,8 @@ HeightEqualizer.prototype.onThisPage = function() {
 HeightEqualizer.prototype.largerThanMinViewport = function() {
   // Return whether or not the given hook is in the DOM
   if ( window.innerWidth >= this.minWidth ) {
-    // console.log('Window is greater than ' + this.minWidth + ' it is ' + window.innerWidth);
     return true;
   } else {
-    // console.log('Window is less than ' + this.minWidth + ' it is ' + window.innerWidth);
     return false;
   };
 }
